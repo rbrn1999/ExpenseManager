@@ -53,41 +53,41 @@ Released under the MIT license: http://jsbin.mit-license.org
     <td>操作選項</td>
   <tr>
     <td>
-      <input type="text" v-model="add_detail.name">
+      <input type="text" id="name-input" v-model="add_detail.name">
     </td>
     <td>
-      <select v-model="add_detail.type">
+      <select id="record-type-selector" v-model="add_detail.type">
         <option>收入</option>
         <option>支出</option>
       </select>
     </td>
     <td>
-      <input type="number" v-model="add_detail.amount" v-on:keypress="isNumber(event)" style="width: 80px">
+      <input type="number" id="amount-input" v-model="add_detail.amount" v-on:keypress="isNumber(event)" style="width: 80px">
     </td>
     <td>
       <input type="text" id="datepicker" v-model="add_detail.date" size="10">
     </td>
     <td>
-      <input type="button" v-on:click="add" value="新增到明細"><br>
-      <input type="button" v-on:click="add_uitem" value="新增到常用項目">
+      <input type="button" id="add-to-detail-button" v-on:click="add" value="新增到明細"><br>
+      <input type="button" id="add-to-usual-button" v-on:click="add_uitem" value="新增到常用項目">
     </td>
 </table>
 <br><hr><br>
     最近期間:
-    <select v-model="recent_day" v-on:change="set_filter_date">
+    <select id="recent-days-selector" v-model="recent_day" v-on:change="set_filter_date">
       <option value="7">最近7天</option>
       <option value="30">最近1個月</option>
       <option value="90">最近3個月</option>
     </select>
     <br>
     設定過濾日期: <label for="from">從</label>
-<input type="text" id="from" name="from" v-model="filter_date.start" size="8">
+<input type="text" id="date-from" name="from" v-model="filter_date.start" size="8">
 <label for="to">到</label>
-<input type="text" id="to" name="to" v-model="filter_date.end" size="8">
+<input type="text" id="date-to" name="to" v-model="filter_date.end" size="8">
 <input type="button" v-on:click="clear_date" value="清除">
     <br>
 <h3>統計</h3>
-    <table class="total_table" border=1 width="100%" cellspacing="0" style="text-align:center">
+    <table class="total_table" id="expense-table" border=1 width="100%" cellspacing="0" style="text-align:center">
       <tr>
         <td>支出項目</td>
         <td>金額</td>
@@ -103,7 +103,7 @@ Released under the MIT license: http://jsbin.mit-license.org
       </tr>
     </table>
     <br>
-    <table class="total_table" border=1 width="100%" cellspacing="0" style="text-align:center">
+    <table class="total_table" id="income-table" border=1 width="100%" cellspacing="0" style="text-align:center">
       <tr>
         <td>收入項目</td>
         <td>金額</td>
