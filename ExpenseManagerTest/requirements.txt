@@ -1,0 +1,6 @@
+selenium
+webdriver_manager
+# for Apple Silicon Macs use the following command if the bug fix isn't released yet
+# pip install git+https://github.com/SergeyPirogov/webdriver_manager@master
+pytest
+
