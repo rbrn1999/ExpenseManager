@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-
+from selenium.webdriver.common.alert import Alert
 
 @pytest.fixture()
 def fixture(): #set-up and tear-down for each test
@@ -403,6 +403,121 @@ def test_clearDate(fixture):
     assert datepickerfrom.text == ""
     datepickerto = driver.find_element(By.ID, "date-to")
     assert datepickerto.text == ""
+
+def test_deleteCommonItems_1(fixture):
+    driver = fixture
+    name_input = driver.find_element(By.ID, "name-input")
+    name_input.click()
+    name_input.send_keys("獎學金")
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0) # 收入
+    com_button = driver.find_element(By.ID, "add-to-usual-button")
+    com_button.click()
+
+    com_items = driver.find_elements(By.CLASS_NAME, 'u-item')
+    assert "獎學金" in [item.text for item in com_items]
+
+    for item in com_items:
+        if item.text == '獎學金':
+            com_items_scholarship = item
+    com_items_scholarship.find_element(By.TAG_NAME, 'input').click()
+
+    com_items = driver.find_elements(By.CLASS_NAME, 'u-item')
+    assert "獎學金" not in [item.text for item in com_items]
+
+def test_deleteCommonItems_2(fixture):
+    driver = fixture
+    name_input = driver.find_element(By.ID, "name-input")
+    name_input.click()
+    name_input.send_keys("衣服")
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(1) # 收入
+    com_button = driver.find_element(By.ID, "add-to-usual-button")
+    com_button.click()
+
+    choose_expense_item = driver.find_element(By.ID, "two")
+    choose_expense_item.click()
+    com_items = driver.find_elements(By.CLASS_NAME, 'u-item')
+    assert "衣服" in [item.text for item in com_items]
+
+    for item in com_items:
+        if item.text == '衣服':
+            com_items_scholarship = item
+    com_items_scholarship.find_element(By.TAG_NAME, 'input').click()
+
+    com_items = driver.find_elements(By.CLASS_NAME, 'u-item')
+    assert "衣服" not in [item.text for item in com_items]
+
+
+def test_deleteDetails(fixture):
+    driver = fixture
+    name_input = driver.find_element(By.ID, "name-input")
+    name_input.click()
+    name_input.send_keys("衣服")
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(1) # 收入
+    amount_input = driver.find_element(By.ID, "amount-input")
+    amount_input.click()
+    amount_input.send_keys("320")
+    datepicker = driver.find_element(By.ID, "datepicker")
+    datepicker.click()
+    datepicker.send_keys("2022/10/15")
+    detail_button = driver.find_element(By.ID, "add-to-detail-button")
+    detail_button.click()
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
+    datepicker = driver.find_element(By.ID, "date-from")
+    datepicker.click()
+    datepicker.clear()
+    datepicker.send_keys("2022/10/01")
+    datepicker = driver.find_element(By.ID, "date-to")
+    datepicker.click()
+    datepicker.clear()
+    datepicker.send_keys("2022/10/31")
+    income_row = driver.find_element(By.XPATH, '//*[@id="expense-table"]/tbody/tr[2]')
+    items = income_row.find_elements(By.TAG_NAME, "td")
+    assert [item.text for item in items] == ["衣服", "320", "100.00"]
+    detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
+    items = detail_row.find_elements(By.TAG_NAME, "td")
+    assert [item.text for item in items[1:-1]] == ["衣服", "支出", "320", "2022/10/15"]
+    total_money = driver.find_element(By.ID, "total_money")
+    assert total_money.text == "總額：-320"
+
+    detail_table = driver.find_element(By.CLASS_NAME, 'detail_table')
+    itemCount = len(detail_table.find_elements(By.TAG_NAME, 'tr'))
+    items[-1].find_element(By.TAG_NAME, 'input').click()
+
+    detail_table_new = driver.find_element(By.CLASS_NAME, 'detail_table')
+    assert itemCount-1 == len(detail_table_new.find_elements(By.TAG_NAME, 'tr'))
+
+def test_emptyProblem_1(fixture):
+    driver = fixture
+    detail_button = driver.find_element(By.ID, "add-to-detail-button")
+    detail_button.click()
+    alert = Alert(driver)
+    assert alert.text == '項目名稱不可為空'
+    alert.accept()
+
+def test_emptyProblem_2(fixture):
+    driver = fixture
+    name_input = driver.find_element(By.ID, "name-input")
+    name_input.click()
+    name_input.send_keys("薪資")
+    detail_button = driver.find_element(By.ID, "add-to-detail-button")
+    detail_button.click()
+    alert = Alert(driver)
+    assert alert.text == '金額不可為空'
+    alert.accept()
+
+def test_emptyProblem_3(fixture):
+    driver = fixture
+    name_input = driver.find_element(By.ID, "name-input")
+    name_input.click()
+    name_input.send_keys("薪資")
+    amount_input = driver.find_element(By.ID, "amount-input")
+    amount_input.click()
+    amount_input.send_keys("320")
+    detail_button = driver.find_element(By.ID, "add-to-detail-button")
+    detail_button.click()
+    alert = Alert(driver)
+    assert alert.text == '日期不可為空'
+    alert.accept()
 
 if __name__ == '__main__':
     pytest.main()
