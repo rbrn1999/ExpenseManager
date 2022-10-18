@@ -60,6 +60,39 @@ def test_inCome_1(fixture):
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額:20"
 
+def test_inCome_2(fixture):
+    driver = fixture
+    u_item = driver.find_element(By.XPATH, '//*[@id="app"]/div/div')
+    u_item.click()
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0) # 收入
+    amount_input = driver.find_element(By.ID, "amount-input")
+    amount_input.click()
+    amount_input.send_keys("1500")
+    datepicker = driver.find_element(By.ID, "datepicker")
+    datepicker.click()
+    datepicker.send_keys("2022/10/15")
+    detail_button = driver.find_element(By.ID, "add-to-detail-button")
+    detail_button.click()
+    Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
+    datepicker = driver.find_element(By.ID, "date-from")
+    datepicker.click()
+    datepicker.clear()
+    datepicker.send_keys("2022/10/01")
+    datepicker = driver.find_element(By.ID, "date-to")
+    datepicker.click()
+    datepicker.clear()
+    datepicker.send_keys("2022/10/31")
+    income_row = driver.find_element(By.XPATH, '//*[@id="income-table"]/tbody/tr[2]')
+    items = income_row.find_elements(By.TAG_NAME, "td")
+    assert [item.text for item in items] == ["工作", "1500", "100.00"]
+
+    detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
+    items = detail_row.find_elements(By.TAG_NAME, "td")
+    assert [item.text for item in items[1:-1]] == ["工作", "收入", "1500", "2022/10/15"]    
+
+    total_money = driver.find_element(By.ID, "total_money")
+    assert total_money.text == "總額:1500"
+
 def test_expenses_3(fixture):
     driver = fixture
     name_input = driver.find_element(By.ID, "name-input")
