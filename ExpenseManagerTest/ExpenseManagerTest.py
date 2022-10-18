@@ -54,6 +54,9 @@ def test_inCome_1(fixture):
     items = detail_row.find_elements(By.TAG_NAME, "td")
     assert [item.text for item in items[1:-1]] == ["薪資", "收入", "20", "2022/10/13"]
 
+    total_money = driver.find_element(By.ID, "total_money")
+    assert total_money.text == "總額:20"
+
 
 if __name__ == '__main__':
     pytest.main()
