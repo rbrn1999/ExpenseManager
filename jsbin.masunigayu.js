@@ -47,15 +47,13 @@ var app = new Vue({
   el: '#app',
   data: {
     usually_item:[
-      {name: '工作', itemType: Type.Income}
+      {name: '工作', itemType: Type.Income},
+      {name: '吃飯', itemType: Type.Expense}
       // new UsualItem('工作', Type.Income),
       // new UsualItem('吃飯', Type.Expense),
       // new UsualItem('買生活用品', Type.Expense)
     ],
     details: [
-      new Expense('買養樂多', Type.Expense, 10, "2022/09/10"),
-      new Expense('買文具', Type.Expense, 40, "2022/09/13"),
-      new Income('工作', Type.Income, 100, "2022/09/15")
     ],
     total_spend:[],
     total_income:[],
