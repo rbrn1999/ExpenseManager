@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 
 @pytest.fixture()
@@ -14,7 +15,9 @@ def fixture(): #set-up and tear-down for each test
     thread = Thread(target = server.serve_forever)
     thread.daemon = True
     thread.start()
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get("http://localhost:5566")
 
     yield driver
