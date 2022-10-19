@@ -78,13 +78,24 @@ var app = new Vue({
       this.usually_item.splice(index, 1)
     },
     add: function () {
-      this.details.push({
-        name:this.add_detail.name,
-        type:this.add_detail.type,
-        amount:this.add_detail.amount,
-        date:this.add_detail.date
-      })
-      this.compute_total_detail();
+      if(this.add_detail.name == ''){
+        alert('項目名稱不可為空')
+      }
+      else if(this.add_detail.amount == ''){
+        alert('金額不可為空')
+      }
+      else if(this.add_detail.date == ''){
+        alert('日期不可為空')
+      }
+      else{
+        this.details.push({
+          name:this.add_detail.name,
+          type:this.add_detail.type,
+          amount:this.add_detail.amount,
+          date:this.add_detail.date
+        })
+        this.compute_total_detail();
+      }
     },
     set_add_detail:function(detail_name){
       this.add_detail.name = detail_name;
