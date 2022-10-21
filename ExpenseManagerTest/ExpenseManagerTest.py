@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.alert import Alert
+from datetime import datetime, timedelta
 
 @pytest.fixture()
 def fixture(): #set-up and tear-down for each test
@@ -37,7 +38,8 @@ def test_inCome_1(fixture):
     amount_input.send_keys("20")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0) #這行是不是不用加？？明細好像收入跟支出會一起看
@@ -55,7 +57,7 @@ def test_inCome_1(fixture):
 
     detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     items = detail_row.find_elements(By.TAG_NAME, "td")
-    assert [item.text for item in items[1:-1]] == ["薪資", "收入", "20", "2022/10/13"]
+    assert [item.text for item in items[1:-1]] == ["薪資", "收入", "20", currentDateAndTime]
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：20"
@@ -70,7 +72,8 @@ def test_inCome_2(fixture):
     amount_input.send_keys("1500")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
@@ -88,7 +91,7 @@ def test_inCome_2(fixture):
 
     detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     items = detail_row.find_elements(By.TAG_NAME, "td")
-    assert [item.text for item in items[1:-1]] == ["工作", "收入", "1500", "2022/10/15"]    
+    assert [item.text for item in items[1:-1]] == ["工作", "收入", "1500", currentDateAndTime]    
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：1500"
@@ -104,7 +107,8 @@ def test_expenses_3(fixture):
     amount_input.send_keys("55")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
@@ -122,7 +126,7 @@ def test_expenses_3(fixture):
 
     detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     items = detail_row.find_elements(By.TAG_NAME, "td")
-    assert [item.text for item in items[1:-1]] == ["薯條", "支出", "55", "2022/10/13"]
+    assert [item.text for item in items[1:-1]] == ["薯條", "支出", "55", currentDateAndTime]
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：-55"
@@ -139,7 +143,8 @@ def test_expenses_4(fixture):
     amount_input.send_keys("120")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
@@ -157,7 +162,7 @@ def test_expenses_4(fixture):
 
     detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     items = detail_row.find_elements(By.TAG_NAME, "td")
-    assert [item.text for item in items[1:-1]] == ["吃飯", "支出", "120", "2022/10/15"]
+    assert [item.text for item in items[1:-1]] == ["吃飯", "支出", "120", currentDateAndTime]
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：-120"
@@ -205,7 +210,8 @@ def test_recentOption7days(fixture):
     amount_input.send_keys("1200")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime1 = (datetime.now() - timedelta(days = 2)).strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime1)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     name_input = driver.find_element(By.ID, "name-input")
@@ -220,7 +226,8 @@ def test_recentOption7days(fixture):
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime2 = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime2)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
 
@@ -235,8 +242,8 @@ def test_recentOption7days(fixture):
     detail_table = driver.find_element(By.CLASS_NAME, 'detail_table')
     rows = detail_table.find_elements(By.TAG_NAME, "tr")
     rows = [[item.text for item in row.find_elements(By.TAG_NAME, "td")[1:-1]] for row in rows]    
-    assert ["薪資", "收入", "1200", "2022/10/13"] in rows
-    assert ["衣服", "支出", "320", "2022/10/15"] in rows
+    assert ["薪資", "收入", "1200", currentDateAndTime1] in rows
+    assert ["衣服", "支出", "320", currentDateAndTime2] in rows
     # 這個也可可
     # detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     # items = detail_row.find_elements(By.TAG_NAME, "td")
@@ -256,7 +263,8 @@ def test_recentOption1Month(fixture):
     amount_input.send_keys("1200")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime1 = (datetime.now() - timedelta(days = 2)).strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime1)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     name_input = driver.find_element(By.ID, "name-input")
@@ -271,7 +279,8 @@ def test_recentOption1Month(fixture):
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime2 = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime2)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
 
@@ -286,8 +295,8 @@ def test_recentOption1Month(fixture):
     detail_table = driver.find_element(By.CLASS_NAME, 'detail_table')
     rows = detail_table.find_elements(By.TAG_NAME, "tr")
     rows = [[item.text for item in row.find_elements(By.TAG_NAME, "td")[1:-1]] for row in rows]
-    assert ["薪資", "收入", "1200", "2022/10/13"] in rows
-    assert ["衣服", "支出", "320", "2022/10/15"] in rows
+    assert ["薪資", "收入", "1200", currentDateAndTime1] in rows
+    assert ["衣服", "支出", "320", currentDateAndTime2] in rows
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：880"
@@ -303,7 +312,8 @@ def test_recentOption3Months(fixture):
     amount_input.send_keys("1200")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime1 = (datetime.now() - timedelta(days = 2)).strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime1)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     name_input = driver.find_element(By.ID, "name-input")
@@ -318,7 +328,8 @@ def test_recentOption3Months(fixture):
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime2 = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime2)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
 
@@ -333,8 +344,8 @@ def test_recentOption3Months(fixture):
     detail_table = driver.find_element(By.CLASS_NAME, 'detail_table')
     rows = detail_table.find_elements(By.TAG_NAME, "tr")
     rows = [[item.text for item in row.find_elements(By.TAG_NAME, "td")[1:-1]] for row in rows]
-    assert ["薪資", "收入", "1200", "2022/10/13"] in rows
-    assert ["衣服", "支出", "320", "2022/10/15"] in rows
+    assert ["薪資", "收入", "1200", currentDateAndTime1] in rows
+    assert ["衣服", "支出", "320", currentDateAndTime2] in rows
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：880"
@@ -350,7 +361,8 @@ def test_settingDateRange(fixture):
     amount_input.send_keys("1200")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/13")
+    currentDateAndTime1 = (datetime.now() - timedelta(days = 2)).strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime1)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     name_input = driver.find_element(By.ID, "name-input")
@@ -365,18 +377,19 @@ def test_settingDateRange(fixture):
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime2 = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime2)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
 
     datepicker = driver.find_element(By.ID, "date-from")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/13")
+    datepicker.send_keys(currentDateAndTime1)
     datepicker = driver.find_element(By.ID, "date-to")
     datepicker.click()
     datepicker.clear()
-    datepicker.send_keys("2022/10/15")
+    datepicker.send_keys(currentDateAndTime2)
 
     expense_row = driver.find_element(By.XPATH, '//*[@id="expense-table"]/tbody/tr[2]')
     items = expense_row.find_elements(By.TAG_NAME, "td")
@@ -388,8 +401,8 @@ def test_settingDateRange(fixture):
     detail_table = driver.find_element(By.CLASS_NAME, 'detail_table')
     rows = detail_table.find_elements(By.TAG_NAME, "tr")
     rows = [[item.text for item in row.find_elements(By.TAG_NAME, "td")[1:-1]] for row in rows]
-    assert ["薪資", "收入", "1200", "2022/10/13"] in rows
-    assert ["衣服", "支出", "320", "2022/10/15"] in rows
+    assert ["薪資", "收入", "1200", currentDateAndTime1] in rows
+    assert ["衣服", "支出", "320", currentDateAndTime2] in rows
 
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：880"
@@ -458,7 +471,8 @@ def test_deleteDetails(fixture):
     amount_input.send_keys("320")
     datepicker = driver.find_element(By.ID, "datepicker")
     datepicker.click()
-    datepicker.send_keys("2022/10/15")
+    currentDateAndTime = datetime.now().strftime("%Y/%m/%d")
+    datepicker.send_keys(currentDateAndTime)
     detail_button = driver.find_element(By.ID, "add-to-detail-button")
     detail_button.click()
     Select(driver.find_element(By.ID, "record-type-selector")).select_by_index(0)
@@ -475,7 +489,7 @@ def test_deleteDetails(fixture):
     assert [item.text for item in items] == ["衣服", "320", "100.00"]
     detail_row = driver.find_element(By.XPATH, '//*[@id="app"]/table[4]/tbody/tr')
     items = detail_row.find_elements(By.TAG_NAME, "td")
-    assert [item.text for item in items[1:-1]] == ["衣服", "支出", "320", "2022/10/15"]
+    assert [item.text for item in items[1:-1]] == ["衣服", "支出", "320", currentDateAndTime]
     total_money = driver.find_element(By.ID, "total_money")
     assert total_money.text == "總額：-320"
 

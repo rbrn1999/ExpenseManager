@@ -72,21 +72,16 @@ Released under the MIT license: http://jsbin.mit-license.org
       <input type="button" id="add-to-usual-button" v-on:click="add_uitem" value="新增到常用項目">
     </td>
 </table>
-<br><hr><br>
-    最近期間:
+<br><hr>
+<br>
+<h3>統計</h3>
+最近期間:
     <select id="recent-days-selector" v-model="recent_day" v-on:change="set_filter_date">
       <option value="7">最近7天</option>
       <option value="30">最近1個月</option>
       <option value="90">最近3個月</option>
     </select>
-    <br>
-    設定過濾日期: <label for="from">從</label>
-<input type="text" id="date-from" name="from" v-model="filter_date.start" size="8">
-<label for="to">到</label>
-<input type="text" id="date-to" name="to" v-model="filter_date.end" size="8">
-<input type="button" v-on:click="clear_date" value="清除">
-    <br>
-<h3>統計</h3>
+    <br><br>
     <table class="total_table" id="expense-table" border=1 width="100%" cellspacing="0" style="text-align:center">
       <tr>
         <td>支出項目</td>
@@ -118,7 +113,15 @@ Released under the MIT license: http://jsbin.mit-license.org
         <td colspan=3>總收入：{{ti}}</td>
       </tr>
     </table>
+
 <h3>明細</h3>
+<br>
+設定過濾日期: <label for="from">從</label>
+<input type="text" id="date-from" name="from" v-model="filter_date.start" size="8">
+<label for="to">到</label>
+<input type="text" id="date-to" name="to" v-model="filter_date.end" size="8">
+<input type="button" v-on:click="clear_date" value="清除">
+<br><br>
 <table class="detail_table" border=1 width="100%" cellspacing="0" style="text-align:center">
   <tr v-for="detail,index in details"
       v-if="check_date(filter_date.start,detail.date,filter_date.end)">
